@@ -72,9 +72,14 @@ if ($cudaVer) {
 }
 if ($gpu -notmatch 'RTX Spark') { $problems += 'GPU is not an NVIDIA RTX Spark (sm_121). The prebuilt engine targets that chip only.' }
 
-$memGB = [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB)
-Say "Memory: $memGB GB"
-if ($memGB -lt 120) { $problems += "The model needs a 128 GB RTX Spark (weights alone are 95 GiB); this machine has $memGB GB." }
+# The RTX Spark's firmware splits its 128 GB between Windows and the GPU (e.g. 30 GB + 96 GB), so count both.
+$ramGB = [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB)
+$gpuMiB = 0
+if ($gpu -match ',\s*([0-9]+)\s*MiB') { $gpuMiB = [int]$Matches[1] }
+$gpuGB = [math]::Round($gpuMiB / 1024)
+Say "Memory: $ramGB GB for Windows + $gpuGB GB reserved for the GPU"
+if (($ramGB + $gpuGB) -lt 115) { $problems += "The model needs a 128 GB RTX Spark (weights alone are 95 GiB); this machine has $($ramGB + $gpuGB) GB in total." }
+elseif ($gpuGB -lt 90) { $problems += "Only $gpuGB GB is reserved for the GPU. This was tested with 96 GB reserved; with less the 95 GiB model may not load." }
 
 if ($problems.Count) {
   $problems | ForEach-Object { Warn $_ }
