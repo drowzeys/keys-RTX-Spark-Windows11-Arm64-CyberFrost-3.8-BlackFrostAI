@@ -127,6 +127,17 @@ if (-not $SkipModel) {
   Say "Listing $HfRepo @ $HfRevision"
   $tree = Invoke-RestMethod -Uri "https://huggingface.co/api/models/$HfRepo/tree/$HfRevision`?recursive=true" -UseBasicParsing
   $files = @($tree | Where-Object { $_.type -eq 'file' })
+  function Get-HubFile($f, $dst, $size) {
+    $url = "https://huggingface.co/$HfRepo/resolve/$HfRevision/$($f.path)"
+    for ($try = 1; $try -le 5; $try++) {
+      & curl.exe -fL --retry 5 --retry-delay 5 -C - -o $dst $url
+      if ($LASTEXITCODE -eq 0 -and (Get-Item $dst).Length -eq $size) { return }
+      if ((Test-Path $dst) -and (Get-Item $dst).Length -gt $size) { Remove-Item $dst -Force }
+      Warn "Retrying $($f.path) (attempt $try, curl exit $LASTEXITCODE)"
+      Start-Sleep 5
+    }
+    Die "Could not download $($f.path). Re-run to resume."
+  }
   $i = 0
   foreach ($f in $files) {
     $i++
@@ -135,24 +146,24 @@ if (-not $SkipModel) {
     $size = [int64]$f.size
     $sha = $null
     if ($f.lfs) { $sha = $f.lfs.oid }
-    $ok = (Test-Path $dst) -and ((Get-Item $dst).Length -eq $size)
-    if (-not $ok) {
+    if (-not ((Test-Path $dst) -and ((Get-Item $dst).Length -eq $size))) {
       Say ("[{0}/{1}] {2} ({3:N2} GiB)" -f $i, $files.Count, $f.path, ($size/1GB))
-      $url = "https://huggingface.co/$HfRepo/resolve/$HfRevision/$($f.path)"
-      for ($try = 1; $try -le 5; $try++) {
-        & curl.exe -fL --retry 5 --retry-delay 5 -C - -o $dst $url
-        if ($LASTEXITCODE -eq 0 -and (Get-Item $dst).Length -eq $size) { break }
-        if ((Test-Path $dst) -and (Get-Item $dst).Length -gt $size) { Remove-Item $dst -Force }
-        Warn "Retrying $($f.path) (attempt $try, curl exit $LASTEXITCODE)"
-        Start-Sleep 5
-      }
-      if ((Get-Item $dst).Length -ne $size) { Die "Could not download $($f.path). Re-run to resume." }
+      Get-HubFile $f $dst $size
     }
     if ($sha -and -not $SkipVerify) {
       $marker = "$dst.sha256ok"
       if (-not ((Test-Path $marker) -and ((Get-Content $marker -Raw).Trim() -eq $sha))) {
         $h = (Get-FileHash $dst -Algorithm SHA256).Hash.ToLower()
-        if ($h -ne $sha) { Remove-Item $dst -Force; Die "Checksum mismatch for $($f.path); deleted it. Re-run to download it again." }
+        if ($h -ne $sha) {
+          # Keep the bad copy aside until a good one has arrived, then remove it.
+          Warn "Checksum mismatch for $($f.path) (got $h); downloading a fresh copy"
+          $bad = "$dst.mismatch"
+          Move-Item $dst $bad -Force
+          Get-HubFile $f $dst $size
+          $h = (Get-FileHash $dst -Algorithm SHA256).Hash.ToLower()
+          if ($h -ne $sha) { Die "The fresh copy of $($f.path) doesn't match either (got $h). Check the disk; the old copy is at $bad." }
+          Remove-Item $bad -Force
+        }
         Set-Content -Path $marker -Value $sha -NoNewline
       }
     }
