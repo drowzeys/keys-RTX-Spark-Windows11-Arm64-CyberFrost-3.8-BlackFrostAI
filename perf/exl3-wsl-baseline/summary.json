@@ -1,0 +1,30 @@
+{
+ "errors": {
+  "single": [],
+  "conc": [],
+  "long": []
+ },
+ "client_tok_s": {
+  "code": 36.2,
+  "devops": 30.0,
+  "prose": 26.0
+ },
+ "ttft_short_s": {
+  "code": 0.81,
+  "devops": 0.81,
+  "prose": 0.84
+ },
+ "long": {
+  "prompt_tokens": [
+   17847,
+   17847
+  ],
+  "ttft_s": 20.28,
+  "client_tok_s": 7.5
+ },
+ "concurrency_total_tok_s": {
+  "1": 29.9,
+  "2": 34.2,
+  "4": 35.4
+ }
+}

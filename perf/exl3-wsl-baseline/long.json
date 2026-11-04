@@ -1,0 +1,206 @@
+{
+  "schema_version": 2,
+  "started_at_utc": "2026-11-04T04:03:47.712853+00:00",
+  "label": "n1x-cf-24k",
+  "expected_response_model": null,
+  "run_id": "n1x-long-001",
+  "base_url": "http://127.0.0.1:8899/v1",
+  "client": {
+    "python": "3.12.16",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-aarch64-with-glibc2.43"
+  },
+  "provenance": {},
+  "settings": {
+    "max_tokens": 200,
+    "repeat": 2,
+    "warmup": 0,
+    "context_tokens_approx": 24000,
+    "cache_mode": "cold",
+    "thinking": false,
+    "temperature": 0,
+    "top_k": 1,
+    "seed": 0
+  },
+  "metric_notes": [
+    "server_decode_tok_s and server_prefill_tok_s are server-reported timings.",
+    "client_end_to_end_tok_s includes prefill, queueing and HTTP overhead.",
+    "TTFT is time to first visible content/reasoning/tool delta, not a role or ping event.",
+    "SSE events may contain multiple speculative tokens; client_decode_tok_s_estimate is approximate.",
+    "A unique cold prefix avoids reusable user prompt blocks; inspect actual cached_prompt_tokens.",
+    "context_tokens_approx is only a prompt construction target; usage.prompt_tokens is authoritative.",
+    "Early EOS is allowed and reported; no request is counted as max_tokens unless usage says so."
+  ],
+  "cases": {
+    "prose": {
+      "prompt_sha256": "e57537d91b6ad207a6273bf7249e1ccbe053bc6bbea6f1f0eb9916a6cd51992c",
+      "warmup": [],
+      "runs": [
+        {
+          "model": "Qwen3.8-Flash-Next-EXL3",
+          "requested_model": "Qwen3.8-Flash-Next-EXL3",
+          "expected_response_model": "Qwen3.8-Flash-Next-EXL3",
+          "stream": true,
+          "finish_reason": "length",
+          "prompt_tokens": 17847,
+          "cached_prompt_tokens": 0,
+          "uncached_prompt_tokens": 17847,
+          "completion_tokens": 200,
+          "ttft_s": 20.21267938500023,
+          "wall_s": 26.591908412000066,
+          "server_decode_tok_s": 27.83,
+          "server_prefill_tok_s": 926.15,
+          "client_end_to_end_tok_s": 7.521084869175711,
+          "client_decode_tok_s_estimate": 31.19597175628205,
+          "draft_acceptance": 0.6388888888888888,
+          "usage": {
+            "prompt_tokens": 17847,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_time": 19.27,
+            "prompt_tokens_per_sec": 926.15,
+            "completion_tokens": 200,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 115,
+              "rejected_prediction_tokens": 65
+            },
+            "completion_time": 7.19,
+            "completion_tokens_per_sec": 27.83,
+            "total_tokens": 18047,
+            "total_time": 26.46
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 17847,
+            "prompt_ms": 19270.0,
+            "prompt_per_token_ms": 1.0797332885078725,
+            "prompt_per_second": 926.1546445251687,
+            "predicted_n": 200,
+            "predicted_ms": 7190.0,
+            "predicted_per_token_ms": 35.95,
+            "predicted_per_second": 27.816411682892905,
+            "draft_n": 180,
+            "draft_n_accepted": 115
+          },
+          "sse_events": 86,
+          "warnings": [
+            "client_decode_estimate_assumes_one_token_in_first_SSE_event"
+          ],
+          "request_sha256": "989bc3c3398312c02a166daa46512b862b209d88564a8b228d78130a85c9ec48",
+          "response_sha256": "41e4d1e17dc3665007b5b1814d60cafa3b5ee5cd84b9e776ada2b813ca76394a",
+          "phase": "measured",
+          "repeat_index": 0
+        },
+        {
+          "model": "Qwen3.8-Flash-Next-EXL3",
+          "requested_model": "Qwen3.8-Flash-Next-EXL3",
+          "expected_response_model": "Qwen3.8-Flash-Next-EXL3",
+          "stream": true,
+          "finish_reason": "length",
+          "prompt_tokens": 17847,
+          "cached_prompt_tokens": 0,
+          "uncached_prompt_tokens": 17847,
+          "completion_tokens": 200,
+          "ttft_s": 20.33963979300006,
+          "wall_s": 26.836065939000036,
+          "server_decode_tok_s": 29.88,
+          "server_prefill_tok_s": 889.24,
+          "client_end_to_end_tok_s": 7.452657198510833,
+          "client_decode_tok_s_estimate": 30.63313559375371,
+          "draft_acceptance": 0.6703910614525139,
+          "usage": {
+            "prompt_tokens": 17847,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_time": 20.07,
+            "prompt_tokens_per_sec": 889.24,
+            "completion_tokens": 200,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 120,
+              "rejected_prediction_tokens": 59
+            },
+            "completion_time": 6.69,
+            "completion_tokens_per_sec": 29.88,
+            "total_tokens": 18047,
+            "total_time": 26.77
+          },
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 17847,
+            "prompt_ms": 20070.0,
+            "prompt_per_token_ms": 1.124558749369642,
+            "prompt_per_second": 889.2376681614351,
+            "predicted_n": 200,
+            "predicted_ms": 6690.0,
+            "predicted_per_token_ms": 33.45,
+            "predicted_per_second": 29.895366218236173,
+            "draft_n": 179,
+            "draft_n_accepted": 120
+          },
+          "sse_events": 81,
+          "warnings": [
+            "client_decode_estimate_assumes_one_token_in_first_SSE_event"
+          ],
+          "request_sha256": "c2803944c0ec5af8695951054df8254aea09dff34d6071aabbba303e96d7b3f3",
+          "response_sha256": "bec9ebe9532bfa9cb0d8c8d97a151c7ea354978ef759220845acc1985cb8904d",
+          "phase": "measured",
+          "repeat_index": 1
+        }
+      ],
+      "summary": {
+        "requests": 2,
+        "server_decode_tok_s": {
+          "p50": 28.854999999999997,
+          "p95": 29.7775,
+          "samples": 2
+        },
+        "server_prefill_tok_s": {
+          "p50": 907.6949999999999,
+          "p95": 924.3045,
+          "samples": 2
+        },
+        "ttft_s": {
+          "p50": 20.276159589000144,
+          "p95": 20.33329177260007,
+          "samples": 2
+        },
+        "wall_s": {
+          "p50": 26.71398717550005,
+          "p95": 26.82385806265004,
+          "samples": 2
+        },
+        "client_end_to_end_tok_s": {
+          "p50": 7.486871033843272,
+          "p95": 7.517663485642467,
+          "samples": 2
+        },
+        "client_decode_tok_s_estimate": {
+          "p50": 30.914553675017878,
+          "p95": 31.16782994815563,
+          "samples": 2
+        },
+        "draft_acceptance": {
+          "p50": 0.6546399751707014,
+          "p95": 0.6688159528243327,
+          "samples": 2
+        },
+        "completion_tokens": [
+          200,
+          200
+        ],
+        "prompt_tokens": [
+          17847,
+          17847
+        ],
+        "cached_prompt_tokens": [
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "errors": [],
+  "model": "Qwen3.8-Flash-Next-EXL3",
+  "completed_at_utc": "2026-11-04T04:04:41.156219+00:00"
+}

@@ -1,0 +1,40 @@
+{
+ "errors_single": [],
+ "decode": {
+  "code": null,
+  "devops": null,
+  "prose": null
+ },
+ "client_tok_s": {
+  "code": 43.8,
+  "devops": 42.2,
+  "prose": 35.7
+ },
+ "ttft_short": {
+  "code": 0.24,
+  "devops": 0.21,
+  "prose": 0.24
+ },
+ "long": {
+  "prompt_tokens": [
+   17851,
+   17851
+  ],
+  "prefill_tok_s": null,
+  "ttft_s": 10.160909271999799,
+  "decode_tok_s": null,
+  "client_tok_s": 13.19495272092086,
+  "errors": []
+ },
+ "concurrency_total_tok_s": {
+  "1": 36.4,
+  "2": 50.2,
+  "4": 65.6
+ },
+ "gpu_busy": {
+  "samples": 53,
+  "mhz": 2120,
+  "watts": 48.8
+ },
+ "ready": "ready in 46 s"
+}
