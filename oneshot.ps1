@@ -215,7 +215,8 @@ if ($NoStart) { Say "Installed. Start with: $(Join-Path $InstallDir 'start.cmd')
 
 # ---- 5. start, wait, smoke test -----------------------------------------------------------------------
 Say "Starting the server on http://${listen}:$Port/v1"
-& cmd.exe /c (Join-Path $InstallDir 'start.cmd') | Out-Null
+# No pipe here: the server would inherit it and the script would wait on it forever.
+Start-Process -FilePath cmd.exe -ArgumentList '/c', "`"$(Join-Path $InstallDir 'start.cmd')`"" -WindowStyle Hidden
 $headers = @{}
 if ($ApiKey) { $headers['Authorization'] = "Bearer $ApiKey" }
 $t0 = Get-Date
