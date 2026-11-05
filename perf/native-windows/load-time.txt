@@ -1,1 +1,1 @@
-loaded in 31.4s
+loaded in 38.9s (oneshot.ps1 start, model on internal NVMe)

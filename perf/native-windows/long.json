@@ -1,19 +1,19 @@
 {
   "schema_version": 2,
-  "started_at_utc": "2026-11-04T22:57:55.127889+00:00",
-  "label": "release-long",
+  "started_at_utc": "2026-11-05T00:27:32.622423+00:00",
+  "label": "verified-long",
   "expected_response_model": null,
-  "run_id": "c909d014c0ae484f",
-  "base_url": "http://127.0.0.1:18080/v1",
+  "run_id": "5fe71df32a86412f",
+  "base_url": "http://127.0.0.1:18081/v1",
   "client": {
     "python": "3.12.3",
     "platform": "Linux-6.17.0-1029-nvidia-aarch64-with-glibc2.39"
   },
   "provenance": {
     "engine": "Ash Hart's engine v1.2.2 (00e7ddd), unmodified, native Windows ARM64 sm_121 build; release zip cyberfrost-engine.exe sha256 2905e82535742b5176017fa125f80dc1a6dfa85e8358a023beee1470e74f9ef0",
-    "model": "Blackfrost-AI/CYBER-FROST-3.8-FP4-Local@15c68d90fbe2d91b28e32ac35bc739ce8d5648d2",
+    "model": "Blackfrost-AI/CYBER-FROST-3.8-FP4-Local@15c68d90fbe2d91b28e32ac35bc739ce8d5648d2, all 21 shards SHA-256 verified against the Hub",
     "hardware": "HP OmniBook X 14, NVIDIA RTX Spark N1X 128 GB, driver 617.21, Windows 11 ARM64, Balanced power plan",
-    "serve": "--context 32768 --parallel 4 --no-thinking --temperature 0",
+    "serve": "oneshot.ps1 defaults: --context 32768 --parallel 4 --thinking --reasoning-effort low (the client turns thinking off per request)",
     "client": "LAN client through an SSH tunnel"
   },
   "settings": {
@@ -51,12 +51,12 @@
           "cached_prompt_tokens": 84,
           "uncached_prompt_tokens": 17792,
           "completion_tokens": 200,
-          "ttft_s": 10.556101352000042,
-          "wall_s": 13.944260525999198,
+          "ttft_s": 10.891495670999575,
+          "wall_s": 14.65886751799917,
           "server_decode_tok_s": null,
           "server_prefill_tok_s": null,
-          "client_end_to_end_tok_s": 14.342818654822048,
-          "client_decode_tok_s_estimate": 58.736744075400345,
+          "client_end_to_end_tok_s": 13.643618768941474,
+          "client_decode_tok_s_estimate": 52.91394736309279,
           "draft_acceptance": null,
           "usage": {
             "prompt_tokens": 17876,
@@ -70,13 +70,13 @@
             }
           },
           "timings": null,
-          "sse_events": 56,
+          "sse_events": 63,
           "warnings": [
             "client_decode_estimate_assumes_one_token_in_first_SSE_event",
             "server_decode_timing_missing"
           ],
-          "request_sha256": "5774053f93d8e544501b9b429f48421f1ae744b01b6d8e195e3588da8c794dba",
-          "response_sha256": "9247a494c6d89d9d028b65c65467dfd97fd59578b977371717271996ea327482",
+          "request_sha256": "3b0618001ba335df00830499a85a0567f1d408a6b8e95e197e0e3d0d22b99756",
+          "response_sha256": "fab5f208b5c80919273442699c9cd54d0bf3514ba226ff78f03d789c582f66b3",
           "phase": "measured",
           "repeat_index": 0
         },
@@ -90,12 +90,12 @@
           "cached_prompt_tokens": 84,
           "uncached_prompt_tokens": 17792,
           "completion_tokens": 200,
-          "ttft_s": 10.708820126999854,
-          "wall_s": 14.128369306999957,
+          "ttft_s": 10.837410219002777,
+          "wall_s": 14.54360473700217,
           "server_decode_tok_s": null,
           "server_prefill_tok_s": null,
-          "client_end_to_end_tok_s": 14.155915354004032,
-          "client_decode_tok_s_estimate": 58.196875162361906,
+          "client_end_to_end_tok_s": 13.75174886946394,
+          "client_decode_tok_s_estimate": 53.79706617767734,
           "draft_acceptance": null,
           "usage": {
             "prompt_tokens": 17876,
@@ -109,13 +109,13 @@
             }
           },
           "timings": null,
-          "sse_events": 59,
+          "sse_events": 63,
           "warnings": [
             "client_decode_estimate_assumes_one_token_in_first_SSE_event",
             "server_decode_timing_missing"
           ],
-          "request_sha256": "d83c64b3f34b5c03b531da57fc75d584751cb655df418c9e196f1cf131de8bda",
-          "response_sha256": "c08f6d97e4b61dd0f399f2148e95238a27be33992e57d161a0f1236825e52037",
+          "request_sha256": "7d37c667c135ed0575f7476922caeadb54a28fde1c0a78137c413f4a92ff9eda",
+          "response_sha256": "d80bc6e7e54e3728f5d38e5996f28569c6ba40164a66466d134ec2897f21dcdb",
           "phase": "measured",
           "repeat_index": 1
         }
@@ -133,23 +133,23 @@
           "samples": 0
         },
         "ttft_s": {
-          "p50": 10.632460739499948,
-          "p95": 10.701184188249863,
+          "p50": 10.864452945001176,
+          "p95": 10.888791398399736,
           "samples": 2
         },
         "wall_s": {
-          "p50": 14.036314916499578,
-          "p95": 14.119163867949919,
+          "p50": 14.60123612750067,
+          "p95": 14.653104378949319,
           "samples": 2
         },
         "client_end_to_end_tok_s": {
-          "p50": 14.24936700441304,
-          "p95": 14.333473489781147,
+          "p50": 13.697683819202707,
+          "p95": 13.746342364437817,
           "samples": 2
         },
         "client_decode_tok_s_estimate": {
-          "p50": 58.46680961888113,
-          "p95": 58.70975062974842,
+          "p50": 53.35550677038506,
+          "p95": 53.75291023694811,
           "samples": 2
         },
         "draft_acceptance": {
@@ -174,5 +174,5 @@
   },
   "errors": [],
   "model": "cyberfrost",
-  "completed_at_utc": "2026-11-04T22:58:23.228603+00:00"
+  "completed_at_utc": "2026-11-05T00:28:01.856372+00:00"
 }

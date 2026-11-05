@@ -27,7 +27,9 @@ param(
   [string]$Name       = 'cyberfrost',
   [string]$ApiKey     = '',
   [switch]$Lan,          # listen on all interfaces instead of 127.0.0.1 (set -ApiKey too)
-  [switch]$Thinking,     # serve with reasoning on (default off: faster, cleaner for agents)
+  [ValidateSet('low','medium','xhigh')]
+  [string]$ReasoningEffort = 'low',  # reasoning goes to its own field; the answer field stays clean
+  [switch]$NoThinking,   # no reasoning mode: this model then writes a short reasoning passage and '</think>' into the answer
   [switch]$SkipModel,    # model already in -ModelDir; skip download + hash checks
   [switch]$SkipVerify,   # download but don't hash (faster re-runs)
   [switch]$NoStart,      # install only
@@ -174,7 +176,7 @@ if (-not (Test-Path (Join-Path $ModelDir 'config.json'))) { Die "No config.json 
 
 # ---- 4. launch scripts --------------------------------------------------------------------------------
 $listen = if ($Lan) { '0.0.0.0' } else { '127.0.0.1' }
-$think = if ($Thinking) { '--thinking' } else { '--no-thinking' }
+$think = if ($NoThinking) { '--no-thinking' } else { "--thinking --reasoning-effort $ReasoningEffort" }
 $keyArg = if ($ApiKey) { "--api-key `"$ApiKey`"" } else { '' }
 $log = Join-Path $InstallDir 'server.log'
 $serveArgs = "serve `"$ModelDir`" --name $Name --host $listen --port $Port --context $Context --parallel $Parallel $think --no-update-check $keyArg"
@@ -203,7 +205,7 @@ $endpoint = [ordered]@{
   api_key  = $(if ($ApiKey) { '<the -ApiKey you set>' } else { 'none (any string)' })
   context  = $Context
   parallel = $Parallel
-  thinking = [bool]$Thinking
+  thinking = $(if ($NoThinking) { 'off' } else { "on, effort $ReasoningEffort" })
   start    = (Join-Path $InstallDir 'start.cmd')
   stop     = (Join-Path $InstallDir 'stop.cmd')
 }
@@ -226,7 +228,7 @@ while (((Get-Date) - $t0).TotalSeconds -lt 900) {
 if (-not $ready) { Get-Content $log -Tail 30; Die "Not ready after 15 minutes. Log: $log" }
 Say ("Ready in {0:N0} s" -f ((Get-Date) - $t0).TotalSeconds)
 
-$body = @{ model = $Name; max_tokens = 32; temperature = 0; messages = @(@{ role = 'user'; content = 'Reply with exactly: cyberfrost ready' }) } | ConvertTo-Json -Depth 5
+$body = @{ model = $Name; max_tokens = 300; temperature = 0; messages = @(@{ role = 'user'; content = 'Reply with exactly: cyberfrost ready' }) } | ConvertTo-Json -Depth 5
 $r = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/v1/chat/completions" -Method Post -Headers $headers -ContentType 'application/json' -Body $body -TimeoutSec 120
 Say ("Test reply: " + $r.choices[0].message.content)
 

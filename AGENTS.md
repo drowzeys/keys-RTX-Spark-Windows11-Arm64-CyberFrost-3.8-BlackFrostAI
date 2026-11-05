@@ -32,7 +32,10 @@ Useful options:
 - `-SkipModel` the model is already in `-ModelDir` (no download, no hashing).
 - `-Port 8000 -Context 32768 -Parallel 4` serving settings (these defaults are what was benchmarked).
 - `-Lan -ApiKey <secret>` serve to other machines on the network; always set a key with `-Lan`.
-- `-Thinking` turn reasoning on (off by default: faster, and cleaner for tool-calling agents).
+- Reasoning is on at `low` effort by default: the model's reasoning arrives in the response's `reasoning_content`
+  field and the answer in `content`, so tool calls and answers stay clean. `-ReasoningEffort medium|xhigh` thinks
+  longer; `-NoThinking` skips the reasoning mode, but this model then writes a short reasoning passage and a
+  literal `</think>` into `content`, so leave it on for agents.
 
 ## 2. Connect
 
@@ -60,8 +63,8 @@ curl.exe -s http://127.0.0.1:8000/v1/models
 
 - The server holds about 100 GB of the shared memory while running. Stop it before your user runs other
   large GPU jobs, and don't run two copies.
-- If you run the one-shot over SSH, Windows ends the server when the SSH session closes. Start it from a
-  local session (or have the user double-click `start.cmd`) for a server that stays up.
+- The server runs in the background and keeps running after the one-shot (or an SSH session) ends; use
+  `stop.cmd` to stop it. It doesn't start by itself after a reboot: run `start.cmd`.
 - Use the power plan your user prefers; the published numbers were measured on Windows' Balanced plan.
 - This model is for **authorized** security research, assessment, engineering and response work.
   Follow its [model card](https://huggingface.co/Blackfrost-AI/CYBER-FROST-3.8-FP4-Local) and the

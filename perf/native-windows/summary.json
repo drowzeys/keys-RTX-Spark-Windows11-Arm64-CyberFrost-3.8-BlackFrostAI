@@ -5,26 +5,26 @@
   "long": []
  },
  "client_tok_s": {
-  "code": 42.7,
-  "devops": 42.2,
-  "prose": 39.3
+  "code": 42.8,
+  "devops": 41.3,
+  "prose": 42.0
  },
  "ttft_short_s": {
-  "code": 0.25,
+  "code": 0.26,
   "devops": 0.24,
-  "prose": 0.26
+  "prose": 0.29
  },
  "long": {
   "prompt_tokens": [
    17876,
    17876
   ],
-  "ttft_s": 10.63,
-  "client_tok_s": 14.2
+  "ttft_s": 10.86,
+  "client_tok_s": 13.7
  },
  "concurrency_total_tok_s": {
-  "1": 39.5,
-  "2": 55.4,
-  "4": 70.7
+  "1": 40.1,
+  "2": 54.4,
+  "4": 67.8
  }
 }

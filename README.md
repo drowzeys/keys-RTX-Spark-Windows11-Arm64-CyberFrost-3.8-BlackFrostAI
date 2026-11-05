@@ -17,18 +17,18 @@ through install, connection and day-to-day use.
 ## Performance
 
 HP OmniBook X 14, NVIDIA RTX Spark N1X (128 GB), driver 617.21, Windows 11 ARM64 on the Balanced power plan.
-Served with `--context 32768 --parallel 4`, thinking off, greedy. Client tokens per second include drafting
+Served with the one-shot's defaults (`--context 32768 --parallel 4`, reasoning at `low`); the client turns thinking off per request and samples greedily, so the clock measures answer tokens. Client tokens per second include drafting
 and all overheads (what your agent sees), not a decode-only clock.
 
 | Measure | Native Windows 11 ARM64 |
 |---|---:|
-| Single request, code / devops / prose (tok/s) | **42.7-51.2 / 41.2-42.2 / 38.1-39.3** |
-| Time to first token, short prompt | 0.24-0.26 s |
-| 17,876-token prompt: time to first token | 10.6 s |
-| 17,876-token prompt: tok/s including prefill | 14.2 |
-| 1 / 2 / 4 requests at once, total tok/s | **39.5 / 55.4 / 70.7** |
-| Load time (model on internal NVMe, warm) | 31.4 s |
-| GPU while generating | ~2,160 MHz, ~44 W |
+| Single request, code / devops / prose (tok/s) | **42.8-47.8 / 41.3-41.4 / 38.4-42.0** |
+| Time to first token, short prompt | 0.24-0.29 s |
+| 17,876-token prompt: time to first token | 10.9 s |
+| 17,876-token prompt: tok/s including prefill | 13.7 |
+| 1 / 2 / 4 requests at once, total tok/s | **40.1 / 54.4 / 67.8** |
+| Load time (model on internal NVMe) | 38.9 s |
+| GPU while generating | ~2,160 MHz, ~42 W |
 | Failed requests | 0 |
 
 Single-request ranges are two runs with different prompt salts (the client's `--run-id`): greedy output differs
@@ -38,20 +38,20 @@ Compared on the same laptop and model:
 
 | Same laptop, same model | Native Windows (this repo) | Same engine in WSL | EXL3 3.87 bpw in WSL |
 |---|---:|---:|---:|
-| Single request, code / devops / prose (tok/s) | **42.7-51.2 / 41.2-42.2 / 38.1-39.3** | 43.8 / 42.2 / 35.7 | 36.2 / 30.0 / 26.0 |
-| Time to first token, short prompt | **0.24-0.26 s** | 0.21-0.24 s | 0.81-0.84 s |
-| ~17.9K-token prompt, time to first token | **10.6 s** | 10.2 s | 20.3 s |
-| 1 / 2 / 4 requests at once, total tok/s | **39.5 / 55.4 / 70.7** | 36.4 / 50.2 / 65.6 | 29.9 / 34.2 / 35.4 |
+| Single request, code / devops / prose (tok/s) | **42.8-47.8 / 41.3-41.4 / 38.4-42.0** | 43.8 / 42.2 / 35.7 | 36.2 / 30.0 / 26.0 |
+| Time to first token, short prompt | 0.24-0.29 s | 0.21-0.24 s | 0.81-0.84 s |
+| ~17.9K-token prompt, time to first token | 10.9 s | 10.2 s | 20.3 s |
+| 1 / 2 / 4 requests at once, total tok/s | **40.1 / 54.4 / 67.8** | 36.4 / 50.2 / 65.6 | 29.9 / 34.2 / 35.4 |
 
 - **Native vs WSL:** same engine source; native Windows sees the full ~113 GB GPU memory pool (WSL sees 96 GB)
-  and is faster under load (4 requests: 70.7 vs 65.6 tok/s); single-request and first-token times are within run-to-run noise. WSL also needed an engine patch for its memory accounting; native needs none.
+  and is a little faster under load (4 requests: 67.8 vs 65.6 tok/s); single-request and first-token times are about the same. WSL also needed an engine patch for its memory accounting; native needs none.
 - **vs EXL3:** the EXL3 baseline is a 3.87 bpw EXL3 quant of the same Cyber-Frost weights, run with
   [vicruz's Qwen3.8-Flash-Next EXL3 recipe](https://github.com/vcruz305/Qwen3.8-Flash-Next-EXL3-DGX-Spark-recipe)
   (ExLlamaV3 `bccada04` + TabbyAPI) under WSL, measured with the same client.
 - **DGX Spark reference:** Blackfrost-AI's model card reports 47-53 tok/s single-stream *decode* on a DGX Spark
   (GB10). That's a decode-only clock, so it isn't directly comparable with the client numbers above.
 
-Raw JSON for every run is in [`perf/`](perf/). Reproduce with the client in [`bench/`](bench/) (vicruz's, MIT):
+Raw JSON for every run is in [`perf/`](perf/). Every model shard was SHA-256-checked against Blackfrost-AI's Hub record before these runs. Reproduce with the client in [`bench/`](bench/) (vicruz's, MIT):
 
 ```powershell
 python bench\bench_v1.py --base-url http://127.0.0.1:8000/v1 --model cyberfrost --suite all --output single.json
@@ -77,7 +77,7 @@ python bench\bench_v1.py --base-url http://127.0.0.1:8000/v1 --model cyberfrost 
    it and sends a test request.
 5. Prints the endpoint, `http://127.0.0.1:8000/v1` with model `cyberfrost`, and saves it to `agent-endpoint.json`.
 
-Options: `-ModelDir`, `-SkipModel` (already downloaded), `-Port`, `-Context`, `-Parallel`, `-Thinking`,
+Options: `-ModelDir`, `-SkipModel` (already downloaded), `-Port`, `-Context`, `-Parallel`, `-ReasoningEffort low|medium|xhigh` (default `low`), `-NoThinking`,
 `-Lan -ApiKey <secret>` (serve on your network), `-NoStart`. See the top of [`oneshot.ps1`](oneshot.ps1).
 
 ## The prebuilt engine
